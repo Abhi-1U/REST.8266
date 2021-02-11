@@ -7,7 +7,7 @@ except:
 
 from machine import Pin, freq
 import network
-
+import utime
 import esp
 esp.osdebug(None)
 
@@ -27,4 +27,12 @@ while station.isconnected() == False:
 print('Connection successful')
 print(station.ifconfig())
 
+#RTC
+rtc=RTC()
+t = time()
+tm = utime.localtime(t)
+tm = tm[0:3] + (0,) + tm[3:6] + (0,)
+rtc.datetime(tm)
+
+# LED
 led = Pin(2, Pin.OUT)
