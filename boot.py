@@ -5,10 +5,11 @@ try:
 except:
     import socket
 
-from machine import Pin, freq
+from machine import Pin,freq,RTC,ADC
 import network
 import utime
 import esp
+import os
 esp.osdebug(None)
 
 gc.collect()
@@ -29,10 +30,6 @@ print(station.ifconfig())
 
 #RTC
 rtc=RTC()
-t = time()
-tm = utime.localtime(t)
-tm = tm[0:3] + (0,) + tm[3:6] + (0,)
-rtc.datetime(tm)
 
 # LED
 led = Pin(2, Pin.OUT)
