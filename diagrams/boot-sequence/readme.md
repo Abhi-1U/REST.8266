@@ -40,9 +40,6 @@ After the header come the actual elf sections. Each is headed by another 8 byte 
 typedef struct {
     uint32 address;
     uint32 length;
-} sect_header;typedef struct {
-    uint32 address;
-    uint32 length;
 } sect_header;
 ```
 The first stage boot loader verifies the magic and sets the flash mode according to the flags. Then it copies each section to the corresponding address from the header (which should be within the iram section starting at 0x40100000). As the sections are loaded a single checksum is created of all the data (headers are not included). If the final checksum matches the one stored at the end of the elf section on the flash it will call the function found at entry\_addr.

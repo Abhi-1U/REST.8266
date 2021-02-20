@@ -1,3 +1,4 @@
+![REST.8266](diagrams/rest.8266logo.svg)
 # REST.8266 
 
 ## Topology:
