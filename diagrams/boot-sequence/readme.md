@@ -1,4 +1,4 @@
-# Gantt Chart
+# Boot Sequence Diagram
 
 ## Details
 Generator: Mermaid js   

@@ -1,4 +1,4 @@
-# Gantt Chart
+# Sequence Diagram
 
 ## Details
 Generator: Mermaid js  
