@@ -1,21 +1,21 @@
-#REST.8266 V0.1.2
+# This file is executed on every boot (including wake-boot from deepsleep)
 try:
-    import gc
-    import usocket as socket
+  import usocket as socket
 except:
-    import socket
+  import socket
 
-from machine import Pin,freq,RTC,ADC
+
 import network
 import utime
 import esp
 import os
 esp.osdebug(None)
 
+import gc
 gc.collect()
 
-ssid = 'YourWiFiSSID'
-password = ':)'
+ssid = 'SSID'
+password = 'passcode'
 
 station = network.WLAN(network.STA_IF)
 
@@ -23,13 +23,10 @@ station.active(True)
 station.connect(ssid, password)
 
 while station.isconnected() == False:
-    pass
+  pass
 
 print('Connection successful')
 print(station.ifconfig())
-
-#RTC
-rtc=RTC()
-
-# LED
 led = Pin(2, Pin.OUT)
+#import webrepl
+#webrepl.start()
