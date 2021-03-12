@@ -21,7 +21,7 @@ def hardware_details():
     """
     try:
         import esp
-        dev_data={'Board':'ESP8266EX','Arch':'Xtensa 32bit','Firmware':'MicroPython','RAM':'98,304','External-ROM':str(esp.flash_size())}
+        dev_data={'Board':'ESP8266EX','Arch':'Xtensa 32bit','Firmware':'MicroPython','RAM':98304,'External-ROM':esp.flash_size()}
         return dev_data
     except Exception as e:
         print(e)
