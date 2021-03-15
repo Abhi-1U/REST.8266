@@ -27,6 +27,12 @@ while station.isconnected() == False:
 
 print('Connection successful')
 print(station.ifconfig())
+
+from ntptime import settime
+settime()
+print("Updated Time")
+
+
 led = Pin(2, Pin.OUT)
 #import webrepl
 #webrepl.start()
