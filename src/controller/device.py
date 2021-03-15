@@ -27,3 +27,13 @@ def hardware_details():
         print(e)
     finally:
         gc.collect()
+
+def unique_id():
+    try:
+        import binascii,machine
+        data={'Unique ID':binascii.hexlify(machine.unique_id())}
+        return data
+    except Exception as e:
+        print(e)
+    finally:
+        gc.collect()
