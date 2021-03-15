@@ -85,6 +85,16 @@ def device_software(request , response):
     gc.collect()
     yield from jsonify(response, hardware_details())
 
+#-- Device Unique ID
+@router.route('/device/uid', method='GET')
+def device_uid(request , response):
+    """
+    Device Unique ID
+    """
+    from controller.device import unique_id
+    gc.collect()
+    yield from jsonify(response, unique_id())
+    
 #-- Network Operations
 @router.route('/network/ifconfig', method='GET')
 def network_ifconfig(request , response):
@@ -166,6 +176,38 @@ def gpio_control_get(request , response):
     gc.collect()
     yield from jsonify(response, data)
 
+
+@router.route('/fsys/ls', method='GET')
+def fsys_ls(request , response):
+    """
+    list fileSystem
+    """
+    qs=parse_qs(request.qs)
+    from controller.file import ls_file
+    if 'path' in qs:
+        ls_data=ls_file(qs['path'])
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/ls', method='POST')
+def freq_control_post(request , response):
+    yield from request.read_form_data()
+    from controller.file import ls_file
+    if 'path' in request.form:
+        ls_data=ls_file(request.form['path'])
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+#--Clock Time of Server
+@router.route('/clock/time', method='GET')
+def network_scan(request , response):
+    """
+    Get Server Clock time
+    """
+    from controller.clocks import localtime
+    gc.collect()
+    yield from jsonify(response, localtime())
 def main():
     loop = asyncio.get_event_loop()
     loop.create_task(asyncio.start_server(router.handle, '0.0.0.0', 80))
