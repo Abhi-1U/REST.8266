@@ -38,3 +38,15 @@ def localtime():
         print(e)
     finally:
         gc.collect()
+
+def ntpsync():
+    try:
+        from ntptime import settime
+        settime()
+        return localtime()
+    except OSError as OSE:
+        return {}
+    except Exception as e:
+        print(e)
+    finally:
+        gc.collect()
