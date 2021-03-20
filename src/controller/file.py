@@ -21,12 +21,13 @@ def ls_file(path):
 def make_folder(path):
     try:
         import os
-        if path=='':
-            from controller.error import path_error
-            return path_error()
+        if path=='' or path==None:
+            from controller.error import raise_error
+            return raise_error('ERR_FS_1')
         else:
+            from controller.success import success_code
             os.mkdir(path)
-            return 
+            return success_code('OK_FS_1')
     except OSError as OSE:
         return {path:None}
     except Exception as e:
@@ -38,11 +39,15 @@ def remove_folder(path):
     try:
         import os
         if path=='':
-            from controller.error import path_error
-            return path_error()
+            from controller.error import raise_error
+            return raise_error('ERR_FS_1')
         else:
-            os.rmdir(path)
-            return 
+            gc.collect()
+            from controller.success import success_code
+            from controller.access import check_path
+            if check_path(path):
+                os.rmdir(path)
+            return success_code('OK_FS_2')
     except OSError as OSE:
         return {path:None}
     except Exception as e:
@@ -71,6 +76,40 @@ def change_dir(path):
         else:
             os.chdir(path)
  
+    except OSError as OSE:
+        return {path:None}
+    except Exception as e:
+        print(e)
+    finally:
+        gc.collect()
+
+def remove_file(path):
+    try:
+        import os
+        from controller.success import success_code
+        if path=='':
+            from controller.error import raise_error
+            return raise_error('ERR_FS_1')
+        else:
+            os.remove(path)
+            return success_code('OK_FS_5')
+    except OSError as OSE:
+        return {path:None}
+    except Exception as e:
+        print(e)
+    finally:
+        gc.collect()
+
+def rename(path,newname):
+    try:
+        import os
+        from controller.success import success_code
+        if path=='':
+            from controller.error import raise_error
+            return raise_error('ERR_FS_1')
+        else:
+            os.rename(path,newname)
+            return success_code('OK_FS_4')
     except OSError as OSE:
         return {path:None}
     except Exception as e:
