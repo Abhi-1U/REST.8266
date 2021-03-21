@@ -199,6 +199,242 @@ def freq_control_post(request , response):
     gc.collect()
     yield from jsonify(response, ls_data)
 
+@router.route('/fsys/getcwd', method='GET')
+def fsys_get_post(request , response):
+    from controller.file import get_cwd
+    ls_data=get_cwd()
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/mkdir', method='GET')
+def fsys_mkdir(request , response):
+    """
+    create a new folder in fileSystem
+    """
+    qs=parse_qs(request.qs)
+    from controller.file import make_folder
+    if 'path' in qs:
+        ls_data=make_folder(qs['path'])
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/mkdir', method='POST')
+def fsys_mkdir_post(request , response):
+    yield from request.read_form_data()
+    from controller.file import make_folder
+    if 'path' in request.form:
+        ls_data=make_folder(request.form['path'])
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/rmdir', method='GET')
+def fsys_rmdir(request , response):
+    """
+    Removes a folder in fileSystem
+    """
+    qs=parse_qs(request.qs)
+    from controller.file import remove_folder
+    if 'path' in qs:
+        ls_data=remove_folder(qs['path'])
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/rmdir', method='POST')
+def fsys_rmdir_post(request , response):
+    yield from request.read_form_data()
+    from controller.file import remove_folder
+    if 'path' in request.form:
+        ls_data=remove_folder(request.form['path'])
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
+    
+@router.route('/fsys/chdir', method='GET')
+def fsys_chdir(request , response):
+    """
+    Changes working directory in fileSystem
+    """
+    qs=parse_qs(request.qs)
+    from controller.file import change_dir
+    if 'path' in qs:
+        ls_data=change_dir(qs['path'])
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/chdir', method='POST')
+def fsys_chdir_post(request , response):
+    yield from request.read_form_data()
+    from controller.file import change_dir
+    if 'path' in request.form:
+        ls_data=change_dir(request.form['path'])
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
+#-- Rename
+@router.route('/fsys/rename', method='GET')
+def fsys_rename(request , response):
+    """
+    Rename a file or folder in fileSystem
+    """
+    qs=parse_qs(request.qs)
+    from controller.file import rename
+    if 'path' in qs and 'newname' in qs:
+        ls_data=rename(qs['path'],qs['newname'])
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/rename', method='POST')
+def fsys_rename_post(request , response):
+    yield from request.read_form_data()
+    from controller.file import rename
+    if 'path' in request.form and 'newname' in request.form:
+        ls_data=rename(request.form['path'],request.form['newname'])
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+#-- Remove file
+@router.route('/fsys/rm', method='GET')
+def fsys_rm(request , response):
+    """
+    Removes a file in fileSystem
+    """
+    qs=parse_qs(request.qs)
+    from controller.file import remove_file
+    if 'path' in qs:
+        ls_data=remove_file(qs['path'])
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/rm', method='POST')
+def fsys_rm_post(request , response):
+    yield from request.read_form_data()
+    from controller.file import remove_file
+    if 'path' in request.form:
+        ls_data=remove_file(request.form['path'])
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
+@router.route('/fsys/getcwd', method='GET')
+def fsys_get_post(request , response):
+    from controller.file import get_cwd
+    ls_data=get_cwd()
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/mkdir', method='GET')
+def fsys_mkdir(request , response):
+    """
+    create a new folder in fileSystem
+    """
+    qs=parse_qs(request.qs)
+    from controller.file import make_folder
+    if 'path' in qs:
+        ls_data=make_folder(qs['path'])
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/mkdir', method='POST')
+def fsys_mkdir_post(request , response):
+    yield from request.read_form_data()
+    from controller.file import make_folder
+    if 'path' in request.form:
+        ls_data=make_folder(request.form['path'])
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/rmdir', method='GET')
+def fsys_rmdir(request , response):
+    """
+    Removes a folder in fileSystem
+    """
+    qs=parse_qs(request.qs)
+    from controller.file import remove_folder
+    if 'path' in qs:
+        ls_data=remove_folder(qs['path'])
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/rmdir', method='POST')
+def fsys_rmdir_post(request , response):
+    yield from request.read_form_data()
+    from controller.file import remove_folder
+    if 'path' in request.form:
+        ls_data=remove_folder(request.form['path'])
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
+    
+@router.route('/fsys/chdir', method='GET')
+def fsys_chdir(request , response):
+    """
+    Changes working directory in fileSystem
+    """
+    qs=parse_qs(request.qs)
+    from controller.file import change_dir
+    if 'path' in qs:
+        ls_data=change_dir(qs['path'])
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/chdir', method='POST')
+def fsys_chdir_post(request , response):
+    yield from request.read_form_data()
+    from controller.file import change_dir
+    if 'path' in request.form:
+        ls_data=change_dir(request.form['path'])
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
+#-- Rename
+@router.route('/fsys/rename', method='GET')
+def fsys_rename(request , response):
+    """
+    Rename a file or folder in fileSystem
+    """
+    qs=parse_qs(request.qs)
+    from controller.file import rename
+    if 'path' in qs and 'newname' in qs:
+        ls_data=rename(qs['path'],qs['newname'])
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/rename', method='POST')
+def fsys_rename_post(request , response):
+    yield from request.read_form_data()
+    from controller.file import rename
+    if 'path' in request.form and 'newname' in request.form:
+        ls_data=rename(request.form['path'],request.form['newname'])
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+#-- Remove file
+@router.route('/fsys/rm', method='GET')
+def fsys_rm(request , response):
+    """
+    Removes a file in fileSystem
+    """
+    qs=parse_qs(request.qs)
+    from controller.file import remove_file
+    if 'path' in qs:
+        ls_data=remove_file(qs['path'])
+    gc.collect()
+    yield from jsonify(response, ls_data)
+
+@router.route('/fsys/rm', method='POST')
+def fsys_rm_post(request , response):
+    yield from request.read_form_data()
+    from controller.file import remove_file
+    if 'path' in request.form:
+        ls_data=remove_file(request.form['path'])
+    #print("Query String")
+    gc.collect()
+    yield from jsonify(response, ls_data)
 #--Clock Time of Server
 @router.route('/clock/time', method='GET')
 def network_scan(request , response):
@@ -208,6 +444,16 @@ def network_scan(request , response):
     from controller.clocks import localtime
     gc.collect()
     yield from jsonify(response, localtime())
+
+#--Sync Clock Time of Server
+@router.route('/clock/ntpsync', method='GET')
+def ntp_time(request , response):
+    """
+    NTP Sync Server Clock time
+    """
+    from controller.clocks import ntpsync
+    gc.collect()
+    yield from jsonify(response, ntpsync())
 def main():
     loop = asyncio.get_event_loop()
     loop.create_task(asyncio.start_server(router.handle, '0.0.0.0', 80))
