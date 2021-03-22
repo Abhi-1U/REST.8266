@@ -3,10 +3,8 @@
 import ure as re
 import uerrno
 
+
 def unquote_plus(string):
-    """
-    replaces plus with whitespace
-    """
     string = string.replace('+', ' ')
     arr = string.split('%')
     arr2 = [chr(int(part[:2], 16)) + part[2:] for part in arr[1:]]
@@ -14,10 +12,6 @@ def unquote_plus(string):
 
 
 def parse_qs(string):
-    """
-    Parse query strings and converts them into 
-    python dictionary kay value pairs
-    """
     params = {}
     if string:
         pairs = string.split('&')
@@ -35,9 +29,6 @@ def parse_qs(string):
 
 
 def get_mime_type(fname):
-    """
-    Mime Type Extensions for file type identification
-    """
     if fname.endswith('.html'):
         return 'text/html'
     if fname.endswith('.css'):
@@ -48,7 +39,7 @@ def get_mime_type(fname):
         return 'image/png'
     if fname.endswith('.jpg'):
         return 'image/jpeg'
-    if fname.endswith('.txt') or fname.endswith('.csv') :
+    if fname.endswith('.txt') or fname.endswith('.csv') or fname.endswith('.py') :
         return 'text/plain'
     return 'application/octet-stream'
 
@@ -63,9 +54,6 @@ def sendstream(writer, file_):
 
 
 def jsonify(writer, pydict):
-    """
-    creates json object of python dictionary object
-    """
     import ujson
     yield from start_response(writer, 'application/json')
     yield from writer.awrite(ujson.dumps(pydict))
@@ -88,11 +76,6 @@ def http_error(writer, status):
 class HTTPRequest(object):
 
     def read_form_data(self):
-        """
-        This method will handle Form data
-        of type 'application/x-www-form-urlencoded'
-        in HTTP POST Method
-        """
         size = int(self.headers[b'Content-Length'])
         print(size)
         data = yield from self.reader.read(size)
@@ -101,9 +84,6 @@ class HTTPRequest(object):
         self.form = form
 
     def parse_qs(self):
-        """
-        This method will parse query strings for HTTP GET Method
-        """
         form = parse_qs(self.qs)
         self.form = form
 
@@ -127,48 +107,39 @@ class WebServer(object):
         return headers
 
     def handle(self, reader, writer):
-        close = True
-        try:
-            request_line = yield from reader.readline()
-            if request_line == b'':
+        close = True #for closing connections
+        try: 
+            request_line = yield from reader.readline() #reads request line
+            if request_line == b'': # Empty Request rejected
                 yield from writer.aclose()
                 return
-            req = HTTPRequest()
+            req = HTTPRequest()# object created
             request_line = request_line.decode()
-            method, path, proto = request_line.split()
-            path = path.split('?', 1)
+            method, path, proto = request_line.split()# split into method,path,protocol
+            if(method=='HEAD'):
+               yield from start_response(writer)
+            path = path.split('?', 1)# for GET query strings.
             qs = ''
             if len(path) > 1:
-                qs = path[1]
-            path = path[0]
-            print('querystring:',qs)
-            found = False
+                qs = path[1] # Split of Query string part
+            path = path[0] # split of path
+            found = False # finding the uri in map
             for e in self.url_map:
-                pattern = e[0]
-                handler = e[1]
-                extra = {}
+                pattern = e[0] # Path
+                handler = e[1] # Function
+                extra = {} # Extra like methods
                 if len(e) > 2:
-                    extra = e[2]
+                    extra = e[2] 
 
                 if path == pattern:
-                    if extra and extra.get('method'):
-                        if extra['method'] == method:
-                            found = True
-                            break
-                    else:
-                        found = True
-                        break
+                    found = True
+                    break
                 elif not isinstance(pattern, str):
                     m = pattern.match(path)
                     if m:
                         req.url_match = m
-                        if extra and extra.get('method'):
-                            if extra['method'] == method:
-                                found = True
-                                break
-                        else:
-                            found = True
-                            break
+                        found = True
+                        break
 
             if not found:
                 headers_mode = 'skip'
@@ -196,7 +167,7 @@ class WebServer(object):
         except Exception as e:
             print('Exception',e)
 
-        if close is not False:
+        if close is not False: #Force Fully Closing unresolved uri's
             yield from writer.aclose()
 
     def abort(self, writer, status):
@@ -205,22 +176,14 @@ class WebServer(object):
 
     def route(self, url, **kwargs):
         def _route(f):
-            self.url_map.append((url, f, kwargs))
+            self.url_map.append((url, f))
             return f
         return _route
 
     def add_url_rule(self, url, func, **kwargs):
-        self.url_map.append((url, func, kwargs))
+        self.url_map.append((url, func))
 
-    def sendfile(self, writer, fname, content_type=None, headers=None):
-        if not content_type:
-            content_type = get_mime_type(fname)
-        try:
-            with open(fname) as f:
-                yield from start_response(writer, content_type, '200', headers)
-                yield from sendstream(writer, f)
-        except OSError as e:
-            if e.args[0] == uerrno.ENOENT:
-                yield from http_error(writer, '404')
-            else:
-                raise
+
+
+    
+
