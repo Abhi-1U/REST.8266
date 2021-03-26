@@ -29,6 +29,9 @@ def hardware_details():
         gc.collect()
 
 def unique_id():
+    """
+    Returns Unique ID for the Hardware
+    """
     try:
         import binascii,machine
         data={'Unique ID':binascii.hexlify(machine.unique_id())}
@@ -37,3 +40,50 @@ def unique_id():
         print(e)
     finally:
         gc.collect()
+
+def webrepl(response):
+    """
+    Initiate WebREPL
+    """
+    try:
+        from controller.success import success_code
+        import webrepl
+        webrepl.start()
+        return success_code('OK_WR_1')
+    except Exception as e:
+        print(e)
+    finally:
+        gc.collect()
+
+def webrepl_configs(password,response):
+    """
+    Configure WebREPL Password
+    """
+    try:
+        import os
+        from controller.success import success_code
+        os.remove('/webrepl_cfg.py')
+        code="PASS='"+str(password)+"'"
+        with open('/webrepl_cfg.py','w') as f:
+            f.write(code)
+        return success_code('OK_WR_2')
+    except Exception as e:
+        print(e)
+    finally:
+        gc.collect()
+def reset(response):
+    """
+    Hard Reset Device
+    """
+    try:
+        yield from response.aclose()
+        yield from response.aclose()
+        yield from response.aclose()
+        import machine
+        machine.reset()
+    except Exception as e:
+        print(e)
+    finally:
+        machine.reset()
+        gc.collect() 
+       
