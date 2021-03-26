@@ -1,6 +1,9 @@
 import gc
 
 def ls_file(path):
+    """
+    list the directory of path
+    """
     try:
         import os
         if path=="":
@@ -19,6 +22,9 @@ def ls_file(path):
         gc.collect()
 
 def make_folder(path):
+    """
+    Create a new folder
+    """
     try:
         import os
         if path=='' or path==None:
@@ -36,6 +42,9 @@ def make_folder(path):
         gc.collect()
         
 def remove_folder(path):
+    """
+    Remove a folder
+    """
     try:
         import os
         if path=='':
@@ -56,6 +65,9 @@ def remove_folder(path):
         gc.collect()
 
 def get_cwd():
+    """
+    Get the current working directory
+    """
     try:
         import os
         data={'cwd':os.getcwd()}
@@ -68,6 +80,9 @@ def get_cwd():
         gc.collect()
         
 def change_dir(path):
+    """
+    Change the current working directory
+    """
     try:
         import os
         if path=='':
@@ -84,6 +99,9 @@ def change_dir(path):
         gc.collect()
 
 def remove_file(path):
+    """
+    Remove/Delete Files
+    """
     try:
         import os
         from controller.success import success_code
@@ -101,6 +119,9 @@ def remove_file(path):
         gc.collect()
 
 def rename(path,newname):
+    """
+    Rename the file/folder
+    """
     try:
         import os
         from controller.success import success_code
@@ -110,6 +131,32 @@ def rename(path,newname):
         else:
             os.rename(path,newname)
             return success_code('OK_FS_4')
+    except OSError as OSE:
+        return {path:None}
+    except Exception as e:
+        print(e)
+    finally:
+        gc.collect()
+
+def readfile(path,writer):
+    """
+    Read Files from the device
+    """
+    try:
+        import os
+        from controller.success import success_code
+        from userver.server import start_response,sendstream,get_mime_type
+        print(path)
+        content_type=''
+        if path=='':
+            from controller.error import raise_error
+            return raise_error('ERR_FS_1')
+        else:
+            if not content_type:
+                content_type = get_mime_type(path)
+            with open(path,'rb') as f:
+                yield from start_response(writer, content_type, '200')
+                yield from sendstream(writer, f)
     except OSError as OSE:
         return {path:None}
     except Exception as e:
