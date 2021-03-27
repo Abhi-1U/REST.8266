@@ -51,3 +51,8 @@ On boot, Micro-Python ESP8266 port executes \_boot.py script from internal froze
 Once the file-system is mounted, boot.py is executed from it. The standard version of this file is created during first-time module set up and has commands to start a WebREPL daemon (disabled by default, configurable with webrepl\_setup module), etc. This file is customizable by end users (for example, you may want to set some parameters or add other services which should be run on a module start-up). But keep in mind that incorrect modifications to boot.py may still lead to boot loops or lock ups, requiring to reflash a module from scratch. (In particular, it’s recommended that you use either webrepl\_setup module or manual editing to configure WebREPL, but not both).
 
 As a final step of boot procedure, main.py is executed from file-system, if exists. This file is a hook to start up a user application each time on boot (instead of going to REPL). 
+
+## Attribution:
+
+1. **Boot-Process**: [Richar Burtons](https://richard.burtons.org/2015/05/17/esp8266-boot-process/)
+2. **Micropython**:[Damien P. George, Paul Sokolovsky and contributors](https://docs.micropython.org/en/v1.13/esp8266/general.html)
