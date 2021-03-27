@@ -1,24 +1,28 @@
-![REST.8266](diagrams/rest.8266logo.svg)
-# REST.8266 
+<div align="center">
+  <img src="diagrams/rest.8266logo.svg"><br>
+</div> 
 
 ## Topology:
+<div align="center">
+  <img src="diagrams/sequence/r-p-sequence.png"><br>
+</div> 
 
 
 ## Features:
 
-1. GPIO Control
-2. Clock Frequency Control
-3. Board Info
-4. ADC I/O
-5. Wireless Info
-6. PWM Control
-7. RTC Control
-8. I2C Control
-9. SPI Control
-10. UART Control
-11. WebREPL Interface
-12. Power Management
-13. Graphing ADC data
-14. Visualizing PWM output 
-15. Driver Support
-16. uPyrix Matrix support for Microcontrollers
+1. Restful Interface
+2. Support for Variety of HTTP Methods
+3. Excellent Documentation
+4. Micro-Python Implementation 
+5. Based On Asynchronous I/O
+
+## Operations:
+
+1. Networking
+2. CPU
+3. Memory
+4. LED
+5. GPIO
+6. FileSystem
+7. Clock
+8. Device
