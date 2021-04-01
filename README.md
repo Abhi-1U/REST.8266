@@ -15,6 +15,8 @@
 3. Excellent Documentation
 4. Micro-Python Implementation 
 5. Based On Asynchronous I/O
+6. Easy to Modify
+7. Options for Custom Functions
 
 ## Operations:
 
