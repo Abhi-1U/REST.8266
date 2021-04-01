@@ -1,459 +1,182 @@
 import gc
 import uasyncio as asyncio
-from userver.server import WebServer,jsonify,parse_qs
+from userver.server import WebServer,jsonify,parse_qs,start_response
 router=WebServer()
+#--Board LED Status
+@router.route('/led/status')
+def led_status(request , response):
+    from interface.led import status
+    yield from status(request,response)
 
 #--Board LED Control
-@router.route('/led/status', method='GET')
-def led_status(request , response):
-    """
-    led status
-    """
-    from controller.led import led_toggle,led_value
-    led_data=led_value()
-    gc.collect()
-    yield from jsonify(response, led_data)
+@router.route('/led/config')
+def led_control(request , response):
+    from interface.led import config
+    yield from config(request,response)
+#-- Cpu freq status
+@router.route('/cpu/status')
+def cpu_status(request , response):
+    from interface.cpu import status
+    yield from status(request,response)
+#-- Cpu freq control
+@router.route('/cpu/config')
+def freq_control(request , response):
+    from interface.cpu import config
+    yield from config(request,response)
+#-- Heap Memory status
+@router.route('/heap/status')
+def heap_status(request , response):
+    from interface.memory import heap
+    yield from heap(request,response)
+#-- Stack Memory status
+@router.route('/stack/status')
+def stack_status(request , response):
+    from interface.memory import stack
+    yield from stack(request,response)
 
-@router.route('/led/config', method='POST')
-def led_control_post(request , response):
-    yield from request.read_form_data()
-    from controller.led import led_toggle,led_value
-    if 'led' in request.form:
-        led_toggle(request.form['led'])
-    data=led_value()
-    gc.collect()
-    yield from jsonify(response, data)
+#-- Garbage Collector
+@router.route('/garbage/collect')
+def garbage_collect(request , response):
+    from interface.memory import garbage
+    yield from garbage(request,response)
 
-@router.route('/led/config', method='GET')
-def led_control_get(request , response):
-    qs=parse_qs(request.qs)
-    from controller.led import led_toggle,led_value
-    if 'led' in qs:
-        led_toggle(qs['led'])
-    data=led_value()
-    gc.collect()
-    yield from jsonify(response, data)
+#-- Device Software Details
+@router.route('/device/software')
+def dev_soft(request , response):
+    from interface.device import software
+    yield from software(request,response)
 
-#--CPU Operations
-@router.route('/cpu/status', method='GET')
-def freq_status(request , response):
-    """
-    CPU Freq status
-    """
-    from controller.cpu import freq_value,freq_config
-    freq_data=freq_value()
-    gc.collect()
-    yield from jsonify(response, freq_data)
+#-- Device Hardware Details
+@router.route('/device/hardware')
+def dev_hard(request , response):
+    from interface.device import hardware
+    yield from hardware(request,response)
 
-@router.route('/cpu/config', method='POST')
-def freq_control_post(request , response):
-    yield from request.read_form_data()
-    from controller.cpu import freq_value,freq_config
-    if 'freq' in request.form:
-        freq_config(request.form['freq'])
-    data=freq_value()
-    gc.collect()
-    yield from jsonify(response, data)
-    
-@router.route('/cpu/config', method='GET')
-def freq_control_get(request , response):
-    qs=parse_qs(request.qs)
-    from controller.cpu import freq_value,freq_config
-    if 'freq' in qs:
-        freq_config(qs['freq'])
-    data=freq_value()
-    gc.collect()
-    yield from jsonify(response, data)
+#-- Device UID
+@router.route('/device/uid')
+def dev_uid(request , response):
+    from interface.device import uid
+    yield from uid(request,response)
 
-#-- Device Software details
-@router.route('/device/software', method='GET')
-def device_software(request , response):
-    """
-    Device Software version
-    """
-    from controller.device import software_details
-    gc.collect()
-    yield from jsonify(response, software_details())
+#-- Network IfConfig
+@router.route('/network/ifconfig')
+def net_if(request , response):
+    from interface.network import ifconfig
+    yield from ifconfig(request,response)
 
-#-- Device Hardware details 
-@router.route('/device/hardware', method='GET')
-def device_software(request , response):
-    """
-    Device Software version
-    """
-    from controller.device import hardware_details
-    gc.collect()
-    yield from jsonify(response, hardware_details())
+#-- Network scan
+@router.route('/network/scan')
+def net_scan(request , response):
+    from interface.network import scan
+    yield from scan(request,response)
 
-#-- Device Unique ID
-@router.route('/device/uid', method='GET')
-def device_uid(request , response):
-    """
-    Device Unique ID
-    """
-    from controller.device import unique_id
-    gc.collect()
-    yield from jsonify(response, unique_id())
-    
-#-- Network Operations
-@router.route('/network/ifconfig', method='GET')
-def network_ifconfig(request , response):
-    """
-    Network ifconfig
-    """
-    from controller.network import ifconfig
-    gc.collect()
-    yield from jsonify(response, ifconfig())
+#-- Network status
+@router.route('/network/status')
+def net_stat(request , response):
+    from interface.network import status
+    yield from status(request,response)
 
-@router.route('/network/rssi', method='GET')
-def network_rssi(request , response):
-    """
-    Network rssi value
-    """
-    from controller.network import rssi
-    gc.collect()
-    yield from jsonify(response, rssi())
+#-- Network rssi
+@router.route('/network/rssi')
+def net_rssi(request , response):
+    from interface.network import rssi
+    yield from rssi(request,response)
 
-@router.route('/network/status', method='GET')
-def network_status(request , response):
-    """
-    Network status
-    """
-    from controller.network import net_status
-    gc.collect()
-    yield from jsonify(response, net_status())
+#-- GPIO ReadADC
+@router.route('/gpio/readadc')
+def gpio_adc(request , response):
+    from interface.gpio import config
+    yield from config(request,response)
 
-@router.route('/network/scan', method='GET')
-def network_scan(request , response):
-    """
-    Wireless Scan
-    """
-    from controller.network import wifi_scan
-    gc.collect()
-    yield from jsonify(response, wifi_scan())
+#-- GPIO Config
+@router.route('/gpio/config')
+def gpio_control(request , response):
+    from interface.gpio import config
+    yield from config(request,response)
 
-#-- GPIO control
-@router.route('/gpio/readadc', method='GET')
-def adc_level(request , response):
-    """
-    ADC A0 Level (0-1024)
-    """
-    from controller.gpio import adc_read
-    gc.collect()
-    yield from jsonify(response, adc_read())
+#-- GPIO PWM Config
+@router.route('/gpio/pwm')
+def pwm_control(request , response):
+    from interface.gpio import pwm
+    yield from pwm(request,response)
 
-@router.route('/gpio/config', method='POST')
-def gpio_control_post(request , response):
-    yield from request.read_form_data()
-    from controller.gpio import gpio_config
-    pin=None
-    mode=None
-    setup=None
-    if 'pin' in request.form:
-        pin=request.form['pin']
-    if 'mode' in request.form:
-        mode=request.form['mode']
-    if 'setup' in request.form:
-        setup=request.form['setup']
-    data=gpio_config(pin,mode,setup)
-    gc.collect()
-    yield from jsonify(response, data)
-
-@router.route('/gpio/config', method='GET')
-def gpio_control_get(request , response):
-    qs=parse_qs(request.qs)
-    from controller.gpio import gpio_config
-    pin=None
-    mode=None
-    setup=None
-    if 'pin' in qs:
-        pin=qs['pin']
-    if 'mode' in qs:
-        mode=qs['mode']
-    if 'setup' in qs:
-        setup=qs['setup']
-    data=gpio_config(pin,mode,setup)
-    gc.collect()
-    yield from jsonify(response, data)
-
-
-@router.route('/fsys/ls', method='GET')
+#--File System ls
+@router.route('/fsys/ls')
 def fsys_ls(request , response):
-    """
-    list fileSystem
-    """
-    qs=parse_qs(request.qs)
-    from controller.file import ls_file
-    if 'path' in qs:
-        ls_data=ls_file(qs['path'])
-    gc.collect()
-    yield from jsonify(response, ls_data)
+    from interface.fsys import ls
+    yield from ls(request,response)
+#-- Get cwd
+@router.route('/fsys/getcwd')
+def fsys_cwd(request , response):
+    from interface.fsys import cwd
+    yield from cwd(request,response)
 
-@router.route('/fsys/ls', method='POST')
-def freq_control_post(request , response):
-    yield from request.read_form_data()
-    from controller.file import ls_file
-    if 'path' in request.form:
-        ls_data=ls_file(request.form['path'])
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
-
-@router.route('/fsys/getcwd', method='GET')
-def fsys_get_post(request , response):
-    from controller.file import get_cwd
-    ls_data=get_cwd()
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
-
-@router.route('/fsys/mkdir', method='GET')
+#--File System mkdir
+@router.route('/fsys/mkdir')
 def fsys_mkdir(request , response):
-    """
-    create a new folder in fileSystem
-    """
-    qs=parse_qs(request.qs)
-    from controller.file import make_folder
-    if 'path' in qs:
-        ls_data=make_folder(qs['path'])
-    gc.collect()
-    yield from jsonify(response, ls_data)
+    from interface.fsys import mkdir
+    yield from mkdir(request,response)
 
-@router.route('/fsys/mkdir', method='POST')
-def fsys_mkdir_post(request , response):
-    yield from request.read_form_data()
-    from controller.file import make_folder
-    if 'path' in request.form:
-        ls_data=make_folder(request.form['path'])
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
-
-@router.route('/fsys/rmdir', method='GET')
+#--File System rmdir
+@router.route('/fsys/rmdir')
 def fsys_rmdir(request , response):
-    """
-    Removes a folder in fileSystem
-    """
-    qs=parse_qs(request.qs)
-    from controller.file import remove_folder
-    if 'path' in qs:
-        ls_data=remove_folder(qs['path'])
-    gc.collect()
-    yield from jsonify(response, ls_data)
+    from interface.fsys import rmdir
+    yield from rmdir(request,response)
 
-@router.route('/fsys/rmdir', method='POST')
-def fsys_rmdir_post(request , response):
-    yield from request.read_form_data()
-    from controller.file import remove_folder
-    if 'path' in request.form:
-        ls_data=remove_folder(request.form['path'])
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
-    
-@router.route('/fsys/chdir', method='GET')
+#--File System chdir
+@router.route('/fsys/chdir')
 def fsys_chdir(request , response):
-    """
-    Changes working directory in fileSystem
-    """
-    qs=parse_qs(request.qs)
-    from controller.file import change_dir
-    if 'path' in qs:
-        ls_data=change_dir(qs['path'])
-    gc.collect()
-    yield from jsonify(response, ls_data)
+    from interface.fsys import chdir
+    yield from chdir(request,response)
 
-@router.route('/fsys/chdir', method='POST')
-def fsys_chdir_post(request , response):
-    yield from request.read_form_data()
-    from controller.file import change_dir
-    if 'path' in request.form:
-        ls_data=change_dir(request.form['path'])
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
-#-- Rename
-@router.route('/fsys/rename', method='GET')
-def fsys_rename(request , response):
-    """
-    Rename a file or folder in fileSystem
-    """
-    qs=parse_qs(request.qs)
-    from controller.file import rename
-    if 'path' in qs and 'newname' in qs:
-        ls_data=rename(qs['path'],qs['newname'])
-    gc.collect()
-    yield from jsonify(response, ls_data)
-
-@router.route('/fsys/rename', method='POST')
-def fsys_rename_post(request , response):
-    yield from request.read_form_data()
-    from controller.file import rename
-    if 'path' in request.form and 'newname' in request.form:
-        ls_data=rename(request.form['path'],request.form['newname'])
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
-
-#-- Remove file
-@router.route('/fsys/rm', method='GET')
+#--File System remove
+@router.route('/fsys/rm')
 def fsys_rm(request , response):
-    """
-    Removes a file in fileSystem
-    """
-    qs=parse_qs(request.qs)
-    from controller.file import remove_file
-    if 'path' in qs:
-        ls_data=remove_file(qs['path'])
-    gc.collect()
-    yield from jsonify(response, ls_data)
+    from interface.fsys import rm
+    yield from rm(request,response)
 
-@router.route('/fsys/rm', method='POST')
-def fsys_rm_post(request , response):
-    yield from request.read_form_data()
-    from controller.file import remove_file
-    if 'path' in request.form:
-        ls_data=remove_file(request.form['path'])
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
-@router.route('/fsys/getcwd', method='GET')
-def fsys_get_post(request , response):
-    from controller.file import get_cwd
-    ls_data=get_cwd()
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
-
-@router.route('/fsys/mkdir', method='GET')
-def fsys_mkdir(request , response):
-    """
-    create a new folder in fileSystem
-    """
-    qs=parse_qs(request.qs)
-    from controller.file import make_folder
-    if 'path' in qs:
-        ls_data=make_folder(qs['path'])
-    gc.collect()
-    yield from jsonify(response, ls_data)
-
-@router.route('/fsys/mkdir', method='POST')
-def fsys_mkdir_post(request , response):
-    yield from request.read_form_data()
-    from controller.file import make_folder
-    if 'path' in request.form:
-        ls_data=make_folder(request.form['path'])
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
-
-@router.route('/fsys/rmdir', method='GET')
-def fsys_rmdir(request , response):
-    """
-    Removes a folder in fileSystem
-    """
-    qs=parse_qs(request.qs)
-    from controller.file import remove_folder
-    if 'path' in qs:
-        ls_data=remove_folder(qs['path'])
-    gc.collect()
-    yield from jsonify(response, ls_data)
-
-@router.route('/fsys/rmdir', method='POST')
-def fsys_rmdir_post(request , response):
-    yield from request.read_form_data()
-    from controller.file import remove_folder
-    if 'path' in request.form:
-        ls_data=remove_folder(request.form['path'])
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
-    
-@router.route('/fsys/chdir', method='GET')
-def fsys_chdir(request , response):
-    """
-    Changes working directory in fileSystem
-    """
-    qs=parse_qs(request.qs)
-    from controller.file import change_dir
-    if 'path' in qs:
-        ls_data=change_dir(qs['path'])
-    gc.collect()
-    yield from jsonify(response, ls_data)
-
-@router.route('/fsys/chdir', method='POST')
-def fsys_chdir_post(request , response):
-    yield from request.read_form_data()
-    from controller.file import change_dir
-    if 'path' in request.form:
-        ls_data=change_dir(request.form['path'])
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
-#-- Rename
-@router.route('/fsys/rename', method='GET')
+#--File System rename
+@router.route('/fsys/rename')
 def fsys_rename(request , response):
-    """
-    Rename a file or folder in fileSystem
-    """
-    qs=parse_qs(request.qs)
-    from controller.file import rename
-    if 'path' in qs and 'newname' in qs:
-        ls_data=rename(qs['path'],qs['newname'])
-    gc.collect()
-    yield from jsonify(response, ls_data)
+    from interface.fsys import rename
+    yield from rename(request,response)
 
-@router.route('/fsys/rename', method='POST')
-def fsys_rename_post(request , response):
-    yield from request.read_form_data()
-    from controller.file import rename
-    if 'path' in request.form and 'newname' in request.form:
-        ls_data=rename(request.form['path'],request.form['newname'])
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
+#--read file
+@router.route('/fsys/read')
+def fsys_read(request , response):
+    from interface.fsys import read
+    yield from read(request,response)
 
-#-- Remove file
-@router.route('/fsys/rm', method='GET')
-def fsys_rm(request , response):
-    """
-    Removes a file in fileSystem
-    """
-    qs=parse_qs(request.qs)
-    from controller.file import remove_file
-    if 'path' in qs:
-        ls_data=remove_file(qs['path'])
-    gc.collect()
-    yield from jsonify(response, ls_data)
+#--reset
+@router.route('/device/reset')
+def dev_reset(request , response):
+    from interface.device import reset_dev
+    yield from reset_dev(request,response)
+#--web repl
+@router.route('/device/webrepl')
+def dev_webrepl(request , response):
+    from interface.device import webrepl_mode
+    yield from webrepl_mode(request,response)
 
-@router.route('/fsys/rm', method='POST')
-def fsys_rm_post(request , response):
-    yield from request.read_form_data()
-    from controller.file import remove_file
-    if 'path' in request.form:
-        ls_data=remove_file(request.form['path'])
-    #print("Query String")
-    gc.collect()
-    yield from jsonify(response, ls_data)
-#--Clock Time of Server
-@router.route('/clock/time', method='GET')
-def network_scan(request , response):
-    """
-    Get Server Clock time
-    """
-    from controller.clocks import localtime
-    gc.collect()
-    yield from jsonify(response, localtime())
+#--web repl config
+@router.route('/device/webreplconf')
+def dev_conf(request , response):
+    from interface.device import wc
+    yield from wc(request,response)
 
-#--Sync Clock Time of Server
-@router.route('/clock/ntpsync', method='GET')
-def ntp_time(request , response):
-    """
-    NTP Sync Server Clock time
-    """
-    from controller.clocks import ntpsync
-    gc.collect()
-    yield from jsonify(response, ntpsync())
+#--clock time
+@router.route('/clock/time')
+def clock_time(request , response):
+    from interface.clock import time
+    yield from time(request,response)
+
+#--clock ntpsync
+@router.route('/clock/ntpsync')
+def clock_ntpsync(request , response):
+    from interface.clock import ntp_time
+    yield from ntp_time(request,response)
+
+
 def main():
     loop = asyncio.get_event_loop()
     loop.create_task(asyncio.start_server(router.handle, '0.0.0.0', 80))
