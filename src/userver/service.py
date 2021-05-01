@@ -7,12 +7,11 @@ router=WebServer()
 def led_status(request , response):
     from interface.led import status
     yield from status(request,response)
-
 #--Board LED Control
 @router.route('/led/config')
 def led_control(request , response):
-    from interface.led import config
-    yield from config(request,response)
+    from interface.led import control
+    yield from control(request,response)
 #-- Cpu freq status
 @router.route('/cpu/status')
 def cpu_status(request , response):
@@ -37,8 +36,8 @@ def stack_status(request , response):
 #-- Garbage Collector
 @router.route('/garbage/collect')
 def garbage_collect(request , response):
-    from interface.memory import garbage
-    yield from garbage(request,response)
+    from interface.memory import collect
+    yield from collect(request,response)
 
 #-- Device Software Details
 @router.route('/device/software')
@@ -85,21 +84,8 @@ def net_rssi(request , response):
 #-- GPIO ReadADC
 @router.route('/gpio/readadc')
 def gpio_adc(request , response):
-    from interface.gpio import config
-    yield from config(request,response)
-
-#-- GPIO Config
-@router.route('/gpio/config')
-def gpio_control(request , response):
-    from interface.gpio import config
-    yield from config(request,response)
-
-#-- GPIO PWM Config
-@router.route('/gpio/pwm')
-def pwm_control(request , response):
-    from interface.gpio import pwm
-    yield from pwm(request,response)
-
+    from interface.gpio import adc
+    yield from adc(request,response)
 #--File System ls
 @router.route('/fsys/ls')
 def fsys_ls(request , response):
@@ -111,41 +97,11 @@ def fsys_cwd(request , response):
     from interface.fsys import cwd
     yield from cwd(request,response)
 
-#--File System mkdir
-@router.route('/fsys/mkdir')
-def fsys_mkdir(request , response):
-    from interface.fsys import mkdir
-    yield from mkdir(request,response)
-
-#--File System rmdir
-@router.route('/fsys/rmdir')
-def fsys_rmdir(request , response):
-    from interface.fsys import rmdir
-    yield from rmdir(request,response)
-
 #--File System chdir
 @router.route('/fsys/chdir')
 def fsys_chdir(request , response):
     from interface.fsys import chdir
     yield from chdir(request,response)
-
-#--File System remove
-@router.route('/fsys/rm')
-def fsys_rm(request , response):
-    from interface.fsys import rm
-    yield from rm(request,response)
-
-#--File System rename
-@router.route('/fsys/rename')
-def fsys_rename(request , response):
-    from interface.fsys import rename
-    yield from rename(request,response)
-
-#--read file
-@router.route('/fsys/read')
-def fsys_read(request , response):
-    from interface.fsys import read
-    yield from read(request,response)
 
 #--reset
 @router.route('/device/reset')
@@ -158,18 +114,11 @@ def dev_webrepl(request , response):
     from interface.device import webrepl_mode
     yield from webrepl_mode(request,response)
 
-#--web repl config
-@router.route('/device/webreplconf')
-def dev_conf(request , response):
-    from interface.device import wc
-    yield from wc(request,response)
-
 #--clock time
 @router.route('/clock/time')
 def clock_time(request , response):
     from interface.clock import time
     yield from time(request,response)
-
 #--clock ntpsync
 @router.route('/clock/ntpsync')
 def clock_ntpsync(request , response):
@@ -182,3 +131,4 @@ def main():
     loop.create_task(asyncio.start_server(router.handle, '0.0.0.0', 80))
     gc.collect()
     loop.run_forever()
+
