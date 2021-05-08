@@ -1,0 +1,72 @@
+site_name: REST.8266 Client
+repo_name: Abhi-1U/REST.8266
+repo_url: https://github.com/Abhi-1U/REST.8266
+site_author: Abhishek Ulayil
+edit_uri: ""
+site_description: >-
+  REST.8266 is an Restful web service implementation in Micro Python for ESP 8266 (Node MCU) 
+  
+copyright: Copyright &#169; 2020 Abhishek Ulayil
+theme:
+  icon:
+    logo : fontawesome/solid/book
+    repo: fontawesome/brands/git-square
+  favicon: "target.png"
+  features:
+    - navigation.tabs
+  name: material
+  palette:
+    scheme: default
+    primary: 'teal'
+    accent: 'orange'
+  font: false
+  custom_dir: custom_theme/
+markdown_extensions:
+  - pymdownx.progressbar:
+  - markdown.extensions.admonition:
+  - markdown.extensions.tables:
+  - pymdownx.details:
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - attr_list
+  - admonition
+  - pymdownx.highlight:
+      linenums: true
+  - codehilite:
+      guess_lang: true
+      use_pygments: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tabbed
+extra_javascript:
+  - javascripts/api_client.js
+extra:
+    social:
+      - icon: fontawesome/brands/github
+        link: https://github.com/Abhi-1U
+        name: Author
+      - icon: fontawesome/solid/balance-scale
+        link: https://creativecommons.org/licenses/by-sa/4.0/
+        name: License
+nav:
+    - Home: index.md
+    - FAQ: faq.md
+    - Client Demo: 
+        - LED: led.md
+        - CPU: cpu.md
+        - Memory: memory.md
+        - Network: network.md
+        - Clock: clock.md
+        - GPIO: gpio.md
+        - Device: device.md
+        - Fsys: fsys.md
+        - WebREPL: webrepl.md
+plugins:
+  - git-revision-date-localized
+  - search
+  - minify:
+      minify_html: true
+
