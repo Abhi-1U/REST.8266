@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block site_meta %}
+{{ super()}}
+{% endblock %}
+{% block libs %}
+{{ super() }}
+<script src="{{ base_url }}/assets/js/FileSaver.js"></script>
+<script src="{{ base_url }}/assets/js/term.js"></script>
+<script src="{{ base_url }}/assets/js/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ base_url }}/assets/css/themtoggle.css"/> 
+{% endblock %}
+{%block header %}
+{% include "partials/header.html" %}
+{% endblock %}
+{% block footer %}
+{% include "partials/footer.html" %}
+{% endblock %}
